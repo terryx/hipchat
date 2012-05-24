@@ -1,0 +1,25 @@
+{
+    "author": "Terry <terry@40square.com>",
+    "name": "corporate-website",
+    "description": "FlightOffice Corporate Website",
+    "version": "0.0.1",
+    "homepage": "http://www.flightoffice.com",
+    "private" : true,
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/40square/website.git"
+    },
+    "engines": {
+        "node": "~0.4.8"
+    },
+    "dependencies": {
+        "curl": "*",
+        "ejs": "*",
+        "express": "*",
+        "mimelib-noiconv": "*",
+        "nodemailer": "*",
+        "request": "*",
+        "validator": "*"
+    },
+    "devDependencies": {}
+}

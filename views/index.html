@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+
+        <style>
+            body {
+                padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <div class="navbar navbar-fixed-top">
+                <div class="navbar-inner">
+                    <div class="container">
+
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="#">Node for Hipchat</a>
+                        <div class="nav-collapse">
+                            <ul class="nav">
+
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="container">
+                <form id="hipchat" class="well form-horizontal">
+                    <h3>Hipchat Message</h3>
+                    <br />
+                    <div class="pull-left">
+                        <label>Room List</label>
+                        <select name="room_id">
+                            <option value="39896">Administration</option>
+                            <option value="39886">Engineering</option>
+                            <option value="48768">Horus</option>
+                            <option value="39887">Lounge</option>
+                            <option value="40842">Knowledge Base</option>
+                            <option value="40044">Offshore</option>
+                            <option value="39888">Sales & Marketing</option>
+                        </select>
+                    </div>
+                    <div class="pull-left span3">
+                        <label>Colors</label>
+                        <select name="color">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="purple">Purple</option>
+                            <option value="random">Random</option>
+                        </select>
+                    </div>
+                    <div style="clear:both"></div>
+                    <hr />
+                    <input type="text" name="username" class="span3" placeholder="Enter your name">
+                    <input type="text" id="message" name="message" class="span5" placeholder="Enter your message">
+                    <button type="submit" class="btn">Submit</button>
+                </form>
+            </div> <!-- /container -->
+        </div>
+
+
+        <script>
+            $(function(){
+                $('#hipchat').bind('submit', function(e){
+                    var message = $(this).serialize();
+                    e.preventDefault();
+					
+                    $.ajax({
+                        type: 'POST',
+                        url: 'hipchat-message',
+                        data: message,
+                        beforeSend: function(){
+                            showMessage(203, 'Please wait, sending message....');
+                        },
+                        success: function(data){
+                            if(data){
+                                if(data[0] === 'true'){
+                                    showMessage(200, 'sent');
+                                    $('#message').val('');
+                                } else {
+                                    showMessage(400, data);
+                                }
+                            }
+                        },
+                        error: function(err){
+                            showMessage(400, err);
+                        }
+                    });
+                });
+            });
+			
+            function showMessage(state, message){
+                //type = warning, success, error, info
+                var checked = $('.alert').length >= 0 ? $('.alert').remove() : false;
+				
+                if(checked){
+                    if(state === 200){
+                        $('.form-horizontal').prepend('<div class="alert alert-success">'+ message +'</div>');
+                    }
+					
+                    if(state === 203){
+                        $('.form-horizontal').prepend('<div class="alert alert-info">'+ message +'</div>');
+                    }
+					
+                    if(state === 400){
+                        $('.form-horizontal').prepend('<div class="alert alert-error">'+ message +'</div>');
+                    }
+                }
+            }
+			
+			
+            var SystemMessage = {
+                success : function(message){
+					
+                }
+            }
+        </script>
+    </body>
+</html>
